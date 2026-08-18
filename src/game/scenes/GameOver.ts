@@ -1,10 +1,12 @@
 import { Scene } from 'phaser';
+import { getPlayer, getScore } from '../systems/GameState';
 
 export class GameOver extends Scene
 {
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
     gameover_text : Phaser.GameObjects.Text;
+    score_text : Phaser.GameObjects.Text;
 
     constructor ()
     {
@@ -25,6 +27,16 @@ export class GameOver extends Scene
             align: 'center'
         });
         this.gameover_text.setOrigin(0.5);
+
+        const player = getPlayer(this);
+        const name = player?.name ?? 'Player';
+
+        this.score_text = this.add.text(512, 460, `${name}'s final score: ${getScore(this)}`, {
+            fontFamily: 'Arial', fontSize: 28, color: '#ffffff',
+            stroke: '#000000', strokeThickness: 4,
+            align: 'center'
+        });
+        this.score_text.setOrigin(0.5);
 
         this.input.once('pointerdown', () => {
 
