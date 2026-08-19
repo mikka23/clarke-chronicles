@@ -26,7 +26,13 @@ const config: Phaser.Types.Core.GameConfig = {
 
 const StartGame = (parent: string) => {
 
-    return new Game({ ...config, parent });
+    const game = new Game({ ...config, parent });
+
+    if (import.meta.env.DEV) {
+        (window as any).game = game;
+    }
+
+    return game;
 
 }
 

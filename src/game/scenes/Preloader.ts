@@ -50,7 +50,10 @@ export class Preloader extends Scene
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         //  Wait for the custom title fonts to be ready so MainMenu doesn't flash a fallback font.
-        document.fonts.load('96px Yesteryear').then(() => document.fonts.load('24px "Special Elite"')).finally(() => {
+        document.fonts.load('96px Yesteryear')
+            .then(() => document.fonts.load('24px "Special Elite"'))
+            .then(() => document.fonts.load('64px Bangers'))
+            .finally(() => {
 
             this.scene.start('MainMenu');
 
