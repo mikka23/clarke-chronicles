@@ -33,5 +33,49 @@ export const scene1Questions: MultiSelectQuestion[] = [
         pointsPerCorrect: 1,
         pointsPerIncorrect: -1,
         penaltyOverrides: { ben: -5 }
+    },
+    {
+        id: 'snapped-club',
+        question: 'Select the member of the family who has snapped a club in a fit of rage.',
+        choices: [
+            { key: 'michael', label: 'Michael', texture: 'char-michael' },
+            { key: 'ben', label: 'Ben', texture: 'char-ben' },
+            { key: 'dominic', label: 'Dominic', texture: 'char-dominic' },
+            { key: 'mum', label: 'Mum', texture: 'char-mum' },
+            { key: 'dad', label: 'Dad', texture: 'char-dad' }
+        ],
+        correctKeys: [ 'ben' ],
+        pointsPerCorrect: 1,
+        pointsPerIncorrect: -1,
+        penaltyOverrides: { mum: -5 }
+    },
+    {
+        id: 'dont-let-him-drive',
+        question: 'Who was the subject of the demand "Don\'t let him drive that"?',
+        choices: [
+            { key: 'michael', label: 'Michael', texture: 'char-michael' },
+            { key: 'ben', label: 'Ben', texture: 'char-ben' },
+            { key: 'dominic', label: 'Dominic', texture: 'char-dominic' },
+            { key: 'mum', label: 'Mum', texture: 'char-mum' },
+            { key: 'dad', label: 'Dad', texture: 'char-dad' }
+        ],
+        correctKeys: [ 'dominic' ],
+        pointsPerCorrect: 1,
+        pointsPerIncorrect: -1
+    },
+    {
+        id: 'buggy-in-bunker',
+        question: 'Who has driven a buggy into a bunker at Whitekirk?',
+        choices: [
+            { key: 'michael', label: 'Michael', texture: 'char-michael' },
+            { key: 'ben', label: 'Ben', texture: 'char-ben' },
+            { key: 'dominic', label: 'Dominic', texture: 'char-dominic' },
+            { key: 'mum', label: 'Mum', texture: 'char-mum' },
+            { key: 'dad', label: 'Dad', texture: 'char-dad' }
+        ],
+        correctKeys: [ 'dad' ],
+        pointsPerCorrect: 1,
+        pointsPerIncorrect: -1,
+        penaltyOverrides: { dominic: -5 }
     }
 ];

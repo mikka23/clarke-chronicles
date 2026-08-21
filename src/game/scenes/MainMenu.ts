@@ -15,7 +15,6 @@ export class MainMenu extends Scene
     cartoonWorld: GameObjects.Image;
     portalCanvas: Textures.CanvasTexture;
     logo: GameObjects.Image;
-    prompt: GameObjects.Text;
     transitioning = false;
 
     constructor ()
@@ -38,26 +37,8 @@ export class MainMenu extends Scene
         this.cartoonWorld.enableFilters();
         this.cartoonWorld.filters!.internal.addMask(PORTAL_MASK_KEY, false);
 
-        this.logo = this.add.image(CENTER_X, 165, 'logo');
-        this.scaleLogoToWidth(this.logo, 600);
-
-        this.prompt = this.add.text(CENTER_X, 305, 'CLICK TO BEGIN', {
-            fontFamily: '"Special Elite", Georgia, serif',
-            fontStyle: 'bold',
-            fontSize: 24,
-            color: '#c9a24b',
-            stroke: '#1a0f08',
-            strokeThickness: 3,
-            align: 'center'
-        }).setOrigin(0.5);
-
-        this.tweens.add({
-            targets: this.prompt,
-            alpha: 0.3,
-            duration: 900,
-            yoyo: true,
-            repeat: -1
-        });
+        this.logo = this.add.image(CENTER_X, 224, 'logo');
+        this.scaleLogoToWidth(this.logo, 750);
 
         this.input.once('pointerdown', (pointer: Input.Pointer) => {
 
@@ -76,9 +57,7 @@ export class MainMenu extends Scene
     {
         const local = this.toCartoonWorldLocal(pointer);
 
-        this.tweens.killTweensOf(this.prompt);
         this.logo.setVisible(false);
-        this.prompt.setVisible(false);
 
         const wave = this.cameras.main.filters.internal.addDisplacement('portal-wave', 0, 0);
 
@@ -105,6 +84,10 @@ export class MainMenu extends Scene
             onComplete: () => {
 
                 this.cameras.main.filters.internal.clear();
+
+                // Replaying from MainMenu (e.g. after a GameOver loop) would otherwise
+                // stack a second overlapping instance on top of the one still looping.
+                this.sound.stopByKey('bg-music');
                 this.sound.play('bg-music', { loop: true, volume: 0.5 });
 
                 this.time.delayedCall(HOLD_BEFORE_SELECT, () => {

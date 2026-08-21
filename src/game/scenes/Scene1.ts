@@ -1,6 +1,6 @@
 import { Scene, GameObjects } from 'phaser';
 import { addScore } from '../systems/GameState';
-import { InfoPanel } from '../ui/InfoPanel';
+import { showScoreToast } from '../ui/ScoreToast';
 import { Button } from '../ui/Button';
 import { scene1Questions, MultiSelectQuestion, MultiSelectChoice } from '../data/quiz/scene1';
 
@@ -21,12 +21,15 @@ const CHOICE_STAGGER = 110;
 
 export class Scene1 extends Scene
 {
+    private questionIndex: number = 0;
     private question: MultiSelectQuestion;
     private selectedKeys: Set<string> = new Set();
     private frameDrawers: Map<string, (borderColor: number, borderWidth: number) => void> = new Map();
     private checkMarks: Map<string, GameObjects.Text> = new Map();
     private glows: Map<string, GameObjects.Image> = new Map();
     private submitButton: Button;
+    private roundObjects: GameObjects.GameObject[] = [];
+    private backgroundImage: GameObjects.Image;
 
     constructor ()
     {
@@ -35,14 +38,28 @@ export class Scene1 extends Scene
 
     create ()
     {
-        this.question = scene1Questions[0];
-        this.selectedKeys = new Set();
+        this.questionIndex = 0;
 
         this.ensureGlowTexture();
 
-        this.fitToCanvas(this.add.image(CENTER_X, CENTER_Y, 'ben-golf-cartoon'));
+        this.backgroundImage = this.fitToCanvas(this.add.image(CENTER_X, CENTER_Y, 'ben-golf-cartoon'));
 
         this.add.rectangle(CENTER_X, CENTER_Y, GAME_WIDTH, GAME_HEIGHT, 0x081420, 0.25);
+
+        this.startQuestion();
+    }
+
+    private startQuestion (): void
+    {
+        this.roundObjects.forEach((object) => object.destroy());
+        this.roundObjects = [];
+        this.submitButton?.destroy();
+
+        this.question = scene1Questions[this.questionIndex];
+        this.selectedKeys = new Set();
+        this.frameDrawers.clear();
+        this.checkMarks.clear();
+        this.glows.clear();
 
         this.buildSubmitButton();
         this.playIntro();
@@ -55,6 +72,7 @@ export class Scene1 extends Scene
         this.time.delayedCall(SCENE_VIEW_DELAY, () => {
 
             const question = this.buildQuestionText();
+            this.roundObjects.push(question);
 
             this.tweens.add({
                 targets: question,
@@ -127,6 +145,7 @@ export class Scene1 extends Scene
         choices.forEach((choice, index) => {
 
             const panel = this.buildChoicePanel(choice, startX + index * CHOICE_SPACING, CHOICE_Y);
+            this.roundObjects.push(panel);
 
             panel.setAlpha(0);
             panel.setScale(0.5);
@@ -313,16 +332,110 @@ export class Scene1 extends Scene
 
         addScore(this, total);
 
-        const sign = total >= 0 ? '+' : '';
+        const hasNextQuestion = this.questionIndex < scene1Questions.length - 1;
 
-        const panel = new InfoPanel(this, {
-            y: 450,
-            title: 'RESULT',
-            body: `You scored ${sign}${total} points for this question.`,
-            dismissLabel: 'CONTINUE',
-            onDismiss: () => this.scene.start('Game')
+        showScoreToast(this, total, {
+            onComplete: () => {
+
+                if (hasNextQuestion)
+                {
+                    this.questionIndex++;
+                    this.startQuestion();
+                }
+                else
+                {
+                    this.transitionToReveal();
+                }
+            }
         });
+    }
 
-        panel.show();
+    // Fades the leftover question text, choice panels and submit button out
+    // before the reveal button appears, so it's the only thing left onscreen.
+    private transitionToReveal (): void
+    {
+        const fadeTargets = [ ...this.roundObjects, this.submitButton ];
+
+        this.tweens.add({
+            targets: fadeTargets,
+            alpha: 0,
+            duration: 350,
+            onComplete: () => {
+
+                fadeTargets.forEach((target) => target.destroy());
+                this.roundObjects = [];
+
+                this.showReveal();
+            }
+        });
+    }
+
+    private showReveal (): void
+    {
+        const revealButton = new Button(this, {
+            x: CENTER_X,
+            y: SUBMIT_Y,
+            label: 'REVEAL REALITY',
+            width: 260,
+            onClick: () => {
+
+                revealButton.destroy();
+                this.playRevealTransition();
+            }
+        });
+    }
+
+    // Glitches the cartoon out in a few quick flickers, flashes white, then
+    // dissolves into the real photo underneath - the "digital world giving
+    // way to reality" beat.
+    private playRevealTransition (): void
+    {
+        const cartoonImage = this.backgroundImage;
+
+        const realImage = this.fitToCanvas(this.add.image(CENTER_X, CENTER_Y, 'ben-golf-real'))
+            .setAlpha(0)
+            .setDepth(-1);
+
+        const flash = this.add.rectangle(CENTER_X, CENTER_Y, GAME_WIDTH, GAME_HEIGHT, 0xffffff, 0)
+            .setDepth(10);
+
+        this.tweens.add({
+            targets: cartoonImage,
+            alpha: 0.35,
+            duration: 70,
+            yoyo: true,
+            repeat: 4,
+            onComplete: () => {
+
+                this.tweens.add({ targets: flash, alpha: 0.7, duration: 130, yoyo: true });
+
+                this.tweens.add({ targets: cartoonImage, alpha: 0, duration: 700, ease: 'Sine.InOut' });
+
+                this.tweens.add({
+                    targets: realImage,
+                    alpha: 1,
+                    duration: 700,
+                    ease: 'Sine.InOut',
+                    onComplete: () => {
+
+                        cartoonImage.destroy();
+                        flash.destroy();
+                        this.backgroundImage = realImage;
+
+                        this.showContinue();
+                    }
+                });
+            }
+        });
+    }
+
+    private showContinue (): void
+    {
+        new Button(this, {
+            x: CENTER_X,
+            y: SUBMIT_Y,
+            label: 'CONTINUE',
+            onClick: () => this.scene.start('Game')
+        });
     }
 }

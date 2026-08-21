@@ -45,9 +45,15 @@ export class Game extends Scene
             this.add.image(64, 96, player.texture).setScale(0.3).setOrigin(0.5, 0);
         }
 
-        this.game.registry.events.on('changedata-score', () => {
+        // registry.events lives on the Game instance, not the scene, so a listener
+        // added here would outlive this scene and fire against a destroyed scoreText
+        // on every future score change unless removed on shutdown.
+        const onScoreChanged = () => {
             this.scoreText.setText(this.buildHudText(player?.name ?? 'Player', getScore(this)));
-        });
+        };
+
+        this.game.registry.events.on('changedata-score', onScoreChanged);
+        this.events.once('shutdown', () => this.game.registry.events.off('changedata-score', onScoreChanged));
 
         this.input.once('pointerdown', () => {
 

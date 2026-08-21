@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { POSITIVE_SOUND_FILES, NEGATIVE_SOUND_FILES } from '../data/scoreSounds';
 
 export class Preloader extends Scene
 {
@@ -39,6 +40,9 @@ export class Preloader extends Scene
         this.load.audio('select', 'sounds/select.mp3');
         this.load.audio('click', 'sounds/click.mp3');
 
+        POSITIVE_SOUND_FILES.forEach((file) => this.load.audio(`positive-${file}`, `sounds/positive/${file}.mp3`));
+        NEGATIVE_SOUND_FILES.forEach((file) => this.load.audio(`negative-${file}`, `sounds/negative/${file}.mp3`));
+
         this.load.image('char-dominic', 'characters/dom.png');
         this.load.image('char-michael', 'characters/mc.png');
         this.load.image('char-ben', 'characters/ben.png');
@@ -47,7 +51,8 @@ export class Preloader extends Scene
         this.load.image('garden', 'garden.jpg');
         this.load.image('home', 'home.jpg');
         this.load.image('ben-golf-cartoon', 'ben-golf-cartoon.jpg');
-        this.load.image('logo', 'logo.png');
+        this.load.image('ben-golf-real', 'ben-golf.jpg');
+        this.load.image('logo', 'logo.svg');
     }
 
     create ()
