@@ -1,10 +1,12 @@
 import { Scene, GameObjects, Input, Textures } from 'phaser';
 
-const GAME_WIDTH = 1024;
-const GAME_HEIGHT = 768;
+const GAME_WIDTH = 1280;
+const GAME_HEIGHT = 720;
+const CENTER_X = GAME_WIDTH / 2;
+const CENTER_Y = GAME_HEIGHT / 2;
 const PORTAL_RADIUS = 130;
 const TRANSITION_DURATION = 900;
-const HOLD_BEFORE_SELECT = 2000;
+const HOLD_BEFORE_SELECT = 800;
 const PORTAL_MASK_KEY = 'portal-mask-canvas';
 
 export class MainMenu extends Scene
@@ -12,7 +14,7 @@ export class MainMenu extends Scene
     background: GameObjects.Image;
     cartoonWorld: GameObjects.Image;
     portalCanvas: Textures.CanvasTexture;
-    title: GameObjects.Text;
+    logo: GameObjects.Image;
     prompt: GameObjects.Text;
     transitioning = false;
 
@@ -27,8 +29,8 @@ export class MainMenu extends Scene
 
         // Real photo is the default reality; the cartoon world is only
         // revealed by the click transition.
-        this.background = this.fitToCanvas(this.add.image(512, 384, 'background'));
-        this.cartoonWorld = this.fitToCanvas(this.add.image(512, 384, 'background-cartoon'));
+        this.background = this.fitToCanvas(this.add.image(CENTER_X, CENTER_Y, 'background'));
+        this.cartoonWorld = this.fitToCanvas(this.add.image(CENTER_X, CENTER_Y, 'background-cartoon'));
 
         this.ensurePortalCanvas();
         this.ensureWaveTexture();
@@ -36,23 +38,10 @@ export class MainMenu extends Scene
         this.cartoonWorld.enableFilters();
         this.cartoonWorld.filters!.internal.addMask(PORTAL_MASK_KEY, false);
 
-        this.title = this.add.text(512, 253, 'Clarke Chronicles', {
-            fontFamily: 'Yesteryear, "Times New Roman", serif',
-            fontSize: 96,
-            color: '#e4d4b0',
-            stroke: '#1a0f08',
-            strokeThickness: 12,
-            shadow: {
-                offsetX: 3,
-                offsetY: 5,
-                color: '#000000',
-                blur: 8,
-                fill: true
-            },
-            align: 'center'
-        }).setOrigin(0.5).setLetterSpacing(3);
+        this.logo = this.add.image(CENTER_X, 165, 'logo');
+        this.scaleLogoToWidth(this.logo, 600);
 
-        this.prompt = this.add.text(512, 325, 'CLICK TO BEGIN', {
+        this.prompt = this.add.text(CENTER_X, 305, 'CLICK TO BEGIN', {
             fontFamily: '"Special Elite", Georgia, serif',
             fontStyle: 'bold',
             fontSize: 24,
@@ -88,11 +77,8 @@ export class MainMenu extends Scene
         const local = this.toCartoonWorldLocal(pointer);
 
         this.tweens.killTweensOf(this.prompt);
-        this.tweens.add({
-            targets: this.prompt,
-            alpha: 0,
-            duration: 150
-        });
+        this.logo.setVisible(false);
+        this.prompt.setVisible(false);
 
         const wave = this.cameras.main.filters.internal.addDisplacement('portal-wave', 0, 0);
 
@@ -137,6 +123,17 @@ export class MainMenu extends Scene
         const scale = Math.max(GAME_WIDTH / source.width, GAME_HEIGHT / source.height);
 
         return image.setScale(scale);
+    }
+
+    // Scales an image to a fixed display width while preserving its source
+    // aspect ratio, so the logo reads at a consistent size regardless of the
+    // source file's own resolution.
+    private scaleLogoToWidth (image: GameObjects.Image, width: number): GameObjects.Image
+    {
+        const source = this.textures.get(image.texture.key).getSourceImage();
+        const height = width * (source.height / source.width);
+
+        return image.setDisplaySize(width, height);
     }
 
     // Converts a pointer's screen position into pixel coordinates local to

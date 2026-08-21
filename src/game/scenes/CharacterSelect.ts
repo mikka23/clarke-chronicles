@@ -1,5 +1,6 @@
-import { Scene, GameObjects, Geom, Math as PhaserMath } from 'phaser';
+import { Scene, GameObjects } from 'phaser';
 import { setPlayer } from '../systems/GameState';
+import { Button } from '../ui/Button';
 
 interface PlayerOption
 {
@@ -21,17 +22,24 @@ const PLAYERS: PlayerOption[] = [
 const PANEL_SIZE = 170;
 const GLOW_SIZE = PANEL_SIZE * 2;
 
-const PAGE_W = 780;
-const PAGE_H = 640;
+const PAGE_W = 860;
+const PAGE_H = 600;
 const PAGE_ROTATION = -1.2;
-const PAGE_Y = 372;
-const CONFIRM_Y = 678;
+const PAGE_Y = 345;
+const CONFIRM_Y = 670;
+const GRID_COL_SPACING = 215;
+const GRID_ROW_Y = [ -103, 127 ];
 
 interface PortraitPair
 {
     grey: GameObjects.Image;
     color: GameObjects.Image;
 }
+
+const GAME_WIDTH = 1280;
+const GAME_HEIGHT = 720;
+const CENTER_X = GAME_WIDTH / 2;
+const CENTER_Y = GAME_HEIGHT / 2;
 
 export class CharacterSelect extends Scene
 {
@@ -40,9 +48,9 @@ export class CharacterSelect extends Scene
     panels: Map<string, GameObjects.Container> = new Map();
     portraits: Map<string, PortraitPair> = new Map();
     frameDrawers: Map<string, (borderColor: number, borderWidth: number) => void> = new Map();
-    confirmButton: GameObjects.Container;
-    confirmLabel: GameObjects.Text;
+    confirmButton: Button;
     pageContainer: GameObjects.Container;
+    dimmer: GameObjects.Rectangle;
 
     constructor ()
     {
@@ -51,66 +59,57 @@ export class CharacterSelect extends Scene
 
     create ()
     {
-        this.ensureComicBackground();
         this.ensureGlowTexture();
 
-        this.add.image(512, 384, 'comic-bg');
+        this.fitToCanvas(this.add.image(CENTER_X, CENTER_Y, 'background-cartoon'));
 
-        this.pageContainer = this.add.container(512, PAGE_Y);
+        // A soft scrim behind the bubble so the panel reads as a modal
+        // floating over the cartoon world, rather than another flat layer.
+        this.dimmer = this.add.rectangle(CENTER_X, CENTER_Y, GAME_WIDTH, GAME_HEIGHT, 0x081420, 0)
+            .setOrigin(0.5);
+
+        this.pageContainer = this.add.container(CENTER_X, PAGE_Y);
         this.pageContainer.setAngle(PAGE_ROTATION);
 
         this.buildPage();
         this.buildTitle();
         this.buildGrid();
         this.buildConfirmButton();
+
+        this.playBubbleIntro();
     }
 
-    // A speckled cyan/teal "comic cover sky" backdrop, procedurally generated
-    // rather than a painted asset, so it always fills the canvas exactly.
-    private ensureComicBackground (): void
+    // The cartoon background differs in resolution/aspect ratio from the
+    // canvas, so scale it to cover edge-to-edge rather than letterboxing.
+    private fitToCanvas (image: GameObjects.Image): GameObjects.Image
     {
-        if (this.textures.exists('comic-bg'))
-        {
-            return;
-        }
+        const source = this.textures.get(image.texture.key).getSourceImage();
+        const scale = Math.max(GAME_WIDTH / source.width, GAME_HEIGHT / source.height);
 
-        const w = 1024;
-        const h = 768;
-        const canvasTexture = this.textures.createCanvas('comic-bg', w, h);
+        return image.setScale(scale);
+    }
 
-        if (!canvasTexture)
-        {
-            return;
-        }
+    // Pops the comic page in like a speech bubble surfacing over the
+    // background, with the scrim fading in behind it to sell the "modal"
+    // feel rather than the page simply being another static layer.
+    private playBubbleIntro (): void
+    {
+        this.pageContainer.setScale(0.4);
+        this.pageContainer.setAlpha(0);
 
-        const ctx = canvasTexture.getContext();
-
-        const base = ctx.createLinearGradient(0, 0, w, h);
-        base.addColorStop(0, '#0f8fa8');
-        base.addColorStop(0.5, '#0f6f96');
-        base.addColorStop(1, '#123a6b');
-        ctx.fillStyle = base;
-        ctx.fillRect(0, 0, w, h);
-
-        const blobs: Array<{ x: number, y: number, r: number, color: string, alpha: number }> = [
-            { x: 180, y: 140, r: 260, color: '#3fd7d1', alpha: 0.35 },
-            { x: 820, y: 620, r: 320, color: '#1f4fa0', alpha: 0.45 },
-            { x: 860, y: 160, r: 220, color: '#7a3fbf', alpha: 0.25 },
-            { x: 150, y: 640, r: 260, color: '#0a2a55', alpha: 0.4 },
-            { x: 512, y: 384, r: 380, color: '#2fd0d8', alpha: 0.12 }
-        ];
-
-        blobs.forEach((blob) => {
-            const gradient = ctx.createRadialGradient(blob.x, blob.y, 0, blob.x, blob.y, blob.r);
-            gradient.addColorStop(0, blob.color);
-            gradient.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.globalAlpha = blob.alpha;
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, w, h);
+        this.tweens.add({
+            targets: this.dimmer,
+            fillAlpha: 0.4,
+            duration: 260
         });
 
-        ctx.globalAlpha = 1;
-        canvasTexture.refresh();
+        this.tweens.add({
+            targets: this.pageContainer,
+            scale: 1,
+            alpha: 1,
+            duration: 420,
+            ease: 'Back.Out'
+        });
     }
 
     // A soft radial glow used behind a selected character's panel — simpler
@@ -174,9 +173,9 @@ export class CharacterSelect extends Scene
 
         const divider = this.add.graphics();
         divider.fillStyle(0x2f6fe0, 1);
-        divider.fillRect(-PAGE_W / 2 + 40, -190, PAGE_W - 80, 12);
+        divider.fillRect(-PAGE_W / 2 + 40, -178, PAGE_W - 80, 12);
         divider.fillStyle(0x1a0f08, 0.25);
-        divider.fillRect(-PAGE_W / 2 + 40, -178, PAGE_W - 80, 3);
+        divider.fillRect(-PAGE_W / 2 + 40, -166, PAGE_W - 80, 3);
 
         this.pageContainer.add([ shadow, page, divider, fold ]);
     }
@@ -192,15 +191,15 @@ export class CharacterSelect extends Scene
             padding: { x: 16, y: 16 }
         };
 
-        const yellow = this.add.text(4, -252, 'CHOOSE YOUR HERO!', {
+        const yellow = this.add.text(4, -236, 'CHOOSE YOUR HERO!', {
             ...style, color: '#f6c945'
         }).setOrigin(0.5).setAngle(-3);
 
-        const blue = this.add.text(-2, -256, 'CHOOSE YOUR HERO!', {
+        const blue = this.add.text(-2, -240, 'CHOOSE YOUR HERO!', {
             ...style, color: '#2f6fe0'
         }).setOrigin(0.5).setAngle(-3);
 
-        const red = this.add.text(0, -254, 'CHOOSE YOUR HERO!', {
+        const red = this.add.text(0, -238, 'CHOOSE YOUR HERO!', {
             ...style, color: '#e8402c', stroke: '#1a0f08', strokeThickness: 4
         }).setOrigin(0.5).setAngle(-3);
 
@@ -214,15 +213,14 @@ export class CharacterSelect extends Scene
             [ 'ben', 'michael', 'dominic' ]
         ];
 
-        const ROW_Y = [ -110, 135 ];
         const positions = new Map<string, { x: number, y: number }>();
 
         ROWS.forEach((row, rowIndex) => {
 
-            const rowStartX = -((row.length - 1) * 200) / 2;
+            const rowStartX = -((row.length - 1) * GRID_COL_SPACING) / 2;
 
             row.forEach((key, colIndex) => {
-                positions.set(key, { x: rowStartX + colIndex * 200, y: ROW_Y[rowIndex] });
+                positions.set(key, { x: rowStartX + colIndex * GRID_COL_SPACING, y: GRID_ROW_Y[rowIndex] });
             });
         });
 
@@ -329,96 +327,34 @@ export class CharacterSelect extends Scene
         });
     }
 
-    // A tilted red/navy "flag" banner, styled after the classic Barr soft
-    // drinks logo, in place of the old carved-stone panel.
+    // Shared flag-style button, same look used for every primary action
+    // across scenes.
     private buildConfirmButton (): void
     {
-        // Same slanted quad drawn twice: navy peeking out bottom-left as a
-        // drop shadow, red on top — the layered-card look of the source logo.
-        const flagPoints = [ -96, -22, 88, -36, 100, 24, -80, 36 ];
+        this.confirmButton = new Button(this, {
+            x: CENTER_X,
+            y: CONFIRM_Y,
+            label: 'CONFIRM!',
+            onClick: () => {
 
-        const toPoints = (offsetX: number, offsetY: number): PhaserMath.Vector2[] => {
+                if (!this.selectedKey)
+                {
+                    return;
+                }
 
-            const points: PhaserMath.Vector2[] = [];
+                const player = PLAYERS.find((p) => p.key === this.selectedKey);
 
-            for (let i = 0; i < flagPoints.length; i += 2)
-            {
-                points.push(new PhaserMath.Vector2(flagPoints[i] + offsetX, flagPoints[i + 1] + offsetY));
+                if (player)
+                {
+                    setPlayer(this, player);
+                }
+
+                this.scene.start('EpisodeTitle');
             }
+        });
 
-            return points;
-        };
-
-        const navy = this.add.graphics();
-        navy.fillStyle(0x1a1a5e, 1);
-        navy.fillPoints(toPoints(-11, 15), true);
-
-        const red = this.add.graphics();
-
-        const drawRed = (color: number) => {
-            red.clear();
-            red.fillStyle(color, 1);
-            red.fillPoints(toPoints(0, 0), true);
-            red.lineStyle(3, 0xffffff, 0.85);
-            red.strokePoints(toPoints(0, 0), true);
-        };
-
-        drawRed(0xd9281f);
-
-        const shadowLabel = this.add.text(3, 1, 'CONFIRM!', {
-            fontFamily: 'Bangers, "Arial Black", sans-serif',
-            fontStyle: 'italic',
-            fontSize: 28,
-            color: '#7a1810',
-            padding: { x: 8, y: 8 }
-        }).setOrigin(0.5).setAngle(-6);
-
-        this.confirmLabel = this.add.text(0, -2, 'CONFIRM!', {
-            fontFamily: 'Bangers, "Arial Black", sans-serif',
-            fontStyle: 'italic',
-            fontSize: 28,
-            color: '#ffffff',
-            padding: { x: 8, y: 8 }
-        }).setOrigin(0.5).setAngle(-6);
-
-        this.confirmButton = this.add.container(512, CONFIRM_Y, [ navy, red, shadowLabel, this.confirmLabel ]);
-
-        this.confirmButton.setInteractive(
-            new Geom.Rectangle(-92, -38, 184, 76),
-            Geom.Rectangle.Contains
-        );
-        this.confirmButton.input!.cursor = 'pointer';
         this.confirmButton.setScale(0);
         this.confirmButton.setVisible(false);
-
-        this.confirmButton.on('pointerover', () => {
-            this.tweens.add({ targets: this.confirmButton, scale: 1.08, duration: 100 });
-            drawRed(0xe8493f);
-        });
-
-        this.confirmButton.on('pointerout', () => {
-            this.tweens.add({ targets: this.confirmButton, scale: 1, duration: 100 });
-            drawRed(0xd9281f);
-        });
-
-        this.confirmButton.on('pointerdown', () => {
-
-            if (!this.selectedKey)
-            {
-                return;
-            }
-
-            this.tweens.add({ targets: this.confirmButton, scale: 0.95, duration: 60, yoyo: true });
-
-            const player = PLAYERS.find((p) => p.key === this.selectedKey);
-
-            if (player)
-            {
-                setPlayer(this, player);
-            }
-
-            this.scene.start('Game');
-        });
     }
 
     private ensureGreyTexture (sourceKey: string): string

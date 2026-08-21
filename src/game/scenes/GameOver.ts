@@ -18,10 +18,13 @@ export class GameOver extends Scene
         this.camera = this.cameras.main
         this.camera.setBackgroundColor(0xff0000);
 
-        this.background = this.add.image(512, 384, 'background');
+        this.background = this.add.image(640, 360, 'background');
         this.background.setAlpha(0.5);
 
-        this.gameover_text = this.add.text(512, 384, 'Game Over', {
+        const bgSource = this.textures.get('background').getSourceImage();
+        this.background.setScale(Math.max(1280 / bgSource.width, 720 / bgSource.height));
+
+        this.gameover_text = this.add.text(640, 360, 'Game Over', {
             fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
@@ -31,7 +34,7 @@ export class GameOver extends Scene
         const player = getPlayer(this);
         const name = player?.name ?? 'Player';
 
-        this.score_text = this.add.text(512, 460, `${name}'s final score: ${getScore(this)}`, {
+        this.score_text = this.add.text(640, 436, `${name}'s final score: ${getScore(this)}`, {
             fontFamily: 'Arial', fontSize: 28, color: '#ffffff',
             stroke: '#000000', strokeThickness: 4,
             align: 'center'
