@@ -1,6 +1,8 @@
-export const NARRATION_TITLE = "RACE YOU TO THE END!";
+import { QUIZ_TEXT } from './content';
 
-export const NARRATION_BODY = "Which cousin used to run beside the car until the end of the street?";
+export const NARRATION_TITLE = QUIZ_TEXT.cousinRace.narrationTitle;
+
+export const NARRATION_BODY = QUIZ_TEXT.cousinRace.narrationBody;
 
 export const CORRECT_ANSWERS = [ "sean", "shaun" ];
 

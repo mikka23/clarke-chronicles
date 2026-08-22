@@ -1,8 +1,8 @@
-export const NARRATION_TITLE = "LOCKED OUT";
+import { QUIZ_TEXT } from './content';
 
-export const NARRATION_BODY = "Ben's just decided to leave the car and lock it "
-    + "behind him. You're stuck outside in the rain, sheltering under the "
-    + "bridge. Name the location.";
+export const NARRATION_TITLE = QUIZ_TEXT.greyMaresTail.narrationTitle;
+
+export const NARRATION_BODY = QUIZ_TEXT.greyMaresTail.narrationBody;
 
 export const CORRECT_ANSWERS = [ "grey mare's tail", "moffat" ];
 

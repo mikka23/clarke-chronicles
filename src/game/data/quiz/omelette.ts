@@ -1,19 +1,20 @@
+import { QUIZ_TEXT } from './content';
+
 export interface QuizChoice
 {
     key: string;
     label: string;
 }
 
-export const NARRATION_TITLE = "BONFIRE NIGHT OMELETTE";
+export const NARRATION_TITLE = QUIZ_TEXT.omelette.narrationTitle;
 
-export const QUESTION = "It is bonfire day and Dad has just cooked an omelette, "
-    + "but Michael is refusing to eat it, why?";
+export const QUESTION = QUIZ_TEXT.omelette.question;
 
 export const choices: QuizChoice[] = [
-    { key: 'baked-potato', label: 'He wants to eat a baked potato at the fireworks' },
-    { key: 'smell-of-eggs', label: "He can't stand the smell of eggs" },
-    { key: 'mouse', label: 'He thinks there is a mouse in it' },
-    { key: 'too-many-crisps', label: "He's already eaten too many crisps" }
+    { key: 'baked-potato', label: QUIZ_TEXT.omelette.choices['baked-potato'] },
+    { key: 'smell-of-eggs', label: QUIZ_TEXT.omelette.choices['smell-of-eggs'] },
+    { key: 'mouse', label: QUIZ_TEXT.omelette.choices.mouse },
+    { key: 'too-many-crisps', label: QUIZ_TEXT.omelette.choices['too-many-crisps'] }
 ];
 
 export const CORRECT_KEY = 'mouse';

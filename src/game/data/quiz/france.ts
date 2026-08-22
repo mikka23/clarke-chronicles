@@ -1,6 +1,8 @@
-export const NARRATION_TITLE = "ONE MORE PHOTO";
+import { QUIZ_TEXT } from './content';
 
-export const NARRATION_BODY = "Another trip abroad. Name the country.";
+export const NARRATION_TITLE = QUIZ_TEXT.france.narrationTitle;
+
+export const NARRATION_BODY = QUIZ_TEXT.france.narrationBody;
 
 export const CORRECT_ANSWERS = [ "france" ];
 

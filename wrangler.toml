@@ -5,4 +5,4 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "clarke-chronicles-leaderboard"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "567bd0f0-545b-44a3-a698-372063bc430e"

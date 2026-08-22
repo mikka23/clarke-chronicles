@@ -1,14 +1,16 @@
+import { QUIZ_TEXT } from './content';
+
 export interface QuizChoice
 {
     key: string;
     label: string;
 }
 
-export const NARRATION_BODY = "Speaking of hunger, watch the video and identify the dog.";
+export const NARRATION_BODY = QUIZ_TEXT.floss.narrationBody;
 
 export const choices: QuizChoice[] = [
-    { key: 'amber', label: 'Amber' },
-    { key: 'floss', label: 'Floss' }
+    { key: 'amber', label: QUIZ_TEXT.floss.choices.amber },
+    { key: 'floss', label: QUIZ_TEXT.floss.choices.floss }
 ];
 
 export const CORRECT_KEY = 'floss';

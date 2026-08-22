@@ -6,16 +6,18 @@ export interface AnswerTier
     hint?: string;
 }
 
-export const NARRATION_TITLE = "WHO IS THIS?";
+import { QUIZ_TEXT } from './content';
 
-export const QUESTION = "Who is the person in the photo?";
+export const NARRATION_TITLE = QUIZ_TEXT.plum.narrationTitle;
+
+export const QUESTION = QUIZ_TEXT.plum.question;
 
 export const CORRECT_ANSWERS = [ "plum" ];
 
 export const TIERS: AnswerTier[] = [
     { points: 10 },
-    { points: 5, hint: "He was often seen walking around Pencaitland" },
-    { points: 1, hint: "He shares his name with a fruit" }
+    { points: 5, hint: QUIZ_TEXT.plum.hints.secondAttempt },
+    { points: 1, hint: QUIZ_TEXT.plum.hints.thirdAttempt }
 ];
 
 export const INCORRECT_POINTS = -3;

@@ -1,8 +1,8 @@
-export const NARRATION_TITLE = "AN OLD PHOTO";
+import { QUIZ_TEXT } from './content';
 
-export const NARRATION_BODY = "Tucked in behind everything else, a faded photo "
-    + "turns up of two familiar faces outside somewhere you haven't thought "
-    + "about in years. Name the location.";
+export const NARRATION_TITLE = QUIZ_TEXT.winnyAndIveys.narrationTitle;
+
+export const NARRATION_BODY = QUIZ_TEXT.winnyAndIveys.narrationBody;
 
 // Accepted as a substring anywhere in the typed answer, not the whole
 // string, since the real answer is a place name attached to people's

@@ -1,7 +1,8 @@
-export const NARRATION_TITLE = "ANOTHER PHOTO";
+import { QUIZ_TEXT } from './content';
 
-export const NARRATION_BODY = "Trees for miles and a few familiar faces "
-    + "wandering through them. Name the location.";
+export const NARRATION_TITLE = QUIZ_TEXT.newForest.narrationTitle;
+
+export const NARRATION_BODY = QUIZ_TEXT.newForest.narrationBody;
 
 export const CORRECT_ANSWERS = [ "new forest", "the new forest" ];
 

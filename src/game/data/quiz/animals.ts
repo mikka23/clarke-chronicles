@@ -1,3 +1,5 @@
+import { QUIZ_TEXT } from './content';
+
 export type AnimalMatchMode = 'exact' | 'contains' | 'prefix';
 
 export interface AnimalQuestion
@@ -11,8 +13,8 @@ export interface AnimalQuestion
     values: string[];
 }
 
-export const NARRATION_TITLE = "NAME THE ANIMAL";
-export const NARRATION_BODY = "Name the animal.";
+export const NARRATION_TITLE = QUIZ_TEXT.animals.narrationTitle;
+export const NARRATION_BODY = QUIZ_TEXT.animals.narrationBody;
 
 export const ANIMAL_QUESTIONS: AnimalQuestion[] = [
     { id: 'patch', imageKey: 'patch', mode: 'exact', values: [ 'patch' ] },

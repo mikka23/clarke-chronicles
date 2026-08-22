@@ -1,7 +1,8 @@
-export const NARRATION_TITLE = "ONE MORE PHOTO";
+import { QUIZ_TEXT } from './content';
 
-export const NARRATION_BODY = "Another one of the islands. Name the "
-    + "island this was taken on.";
+export const NARRATION_TITLE = QUIZ_TEXT.skye.narrationTitle;
+
+export const NARRATION_BODY = QUIZ_TEXT.skye.narrationBody;
 
 export const CORRECT_ANSWERS = [ "skye" ];
 

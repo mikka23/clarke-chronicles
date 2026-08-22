@@ -1,14 +1,8 @@
-export const NARRATION_TITLE = "A TASTE OF THE PAST";
+import { QUIZ_TEXT } from './content';
 
-export const NARRATION_BODY = "Time for something to eat - let's take a step back "
-    + "in time for a nice curry at Jamil's. You order:\n\n"
-    + "1 x Beef Curry\n"
-    + "1 x Plain Rice\n"
-    + "1 x Prawn Biryani\n"
-    + "1 x Mango Chutney\n"
-    + "1 x Chapati\n"
-    + "Cover Charge (2 people)\n\n"
-    + "How much does it cost?";
+export const NARRATION_TITLE = QUIZ_TEXT.jamils.narrationTitle;
+
+export const NARRATION_BODY = QUIZ_TEXT.jamils.narrationBody;
 
 // Correct total, in pounds.
 export const CORRECT_ANSWER = 2.37;

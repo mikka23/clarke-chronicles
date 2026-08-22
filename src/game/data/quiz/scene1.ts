@@ -1,3 +1,5 @@
+import { QUIZ_TEXT } from './content';
+
 export interface MultiSelectChoice
 {
     key: string;
@@ -21,13 +23,13 @@ export interface MultiSelectQuestion
 export const scene1Questions: MultiSelectQuestion[] = [
     {
         id: 'hole-in-one',
-        question: 'Select the members of the family who have had a hole in one.',
+        question: QUIZ_TEXT.scene1.questions.holeInOne,
         choices: [
-            { key: 'michael', label: 'Michael', texture: 'char-michael' },
-            { key: 'ben', label: 'Ben', texture: 'char-ben' },
-            { key: 'dominic', label: 'Dominic', texture: 'char-dominic' },
-            { key: 'mum', label: 'Mum', texture: 'char-mum' },
-            { key: 'dad', label: 'Dad', texture: 'char-dad' }
+            { key: 'michael', label: QUIZ_TEXT.scene1.characterLabels.michael, texture: 'char-michael' },
+            { key: 'ben', label: QUIZ_TEXT.scene1.characterLabels.ben, texture: 'char-ben' },
+            { key: 'dominic', label: QUIZ_TEXT.scene1.characterLabels.dominic, texture: 'char-dominic' },
+            { key: 'mum', label: QUIZ_TEXT.scene1.characterLabels.mum, texture: 'char-mum' },
+            { key: 'dad', label: QUIZ_TEXT.scene1.characterLabels.dad, texture: 'char-dad' }
         ],
         correctKeys: [ 'michael', 'dad' ],
         pointsPerCorrect: 1,
@@ -36,13 +38,13 @@ export const scene1Questions: MultiSelectQuestion[] = [
     },
     {
         id: 'snapped-club',
-        question: 'Select the member of the family who has snapped a club in a fit of rage.',
+        question: QUIZ_TEXT.scene1.questions.snappedClub,
         choices: [
-            { key: 'michael', label: 'Michael', texture: 'char-michael' },
-            { key: 'ben', label: 'Ben', texture: 'char-ben' },
-            { key: 'dominic', label: 'Dominic', texture: 'char-dominic' },
-            { key: 'mum', label: 'Mum', texture: 'char-mum' },
-            { key: 'dad', label: 'Dad', texture: 'char-dad' }
+            { key: 'michael', label: QUIZ_TEXT.scene1.characterLabels.michael, texture: 'char-michael' },
+            { key: 'ben', label: QUIZ_TEXT.scene1.characterLabels.ben, texture: 'char-ben' },
+            { key: 'dominic', label: QUIZ_TEXT.scene1.characterLabels.dominic, texture: 'char-dominic' },
+            { key: 'mum', label: QUIZ_TEXT.scene1.characterLabels.mum, texture: 'char-mum' },
+            { key: 'dad', label: QUIZ_TEXT.scene1.characterLabels.dad, texture: 'char-dad' }
         ],
         correctKeys: [ 'ben' ],
         pointsPerCorrect: 1,
@@ -51,13 +53,13 @@ export const scene1Questions: MultiSelectQuestion[] = [
     },
     {
         id: 'struck-in-throat',
-        question: 'Select the member of the family who struck Michael in the throat with a vicious swing of the club.',
+        question: QUIZ_TEXT.scene1.questions.struckInThroat,
         choices: [
-            { key: 'michael', label: 'Michael', texture: 'char-michael' },
-            { key: 'ben', label: 'Ben', texture: 'char-ben' },
-            { key: 'dominic', label: 'Dominic', texture: 'char-dominic' },
-            { key: 'mum', label: 'Mum', texture: 'char-mum' },
-            { key: 'dad', label: 'Dad', texture: 'char-dad' }
+            { key: 'michael', label: QUIZ_TEXT.scene1.characterLabels.michael, texture: 'char-michael' },
+            { key: 'ben', label: QUIZ_TEXT.scene1.characterLabels.ben, texture: 'char-ben' },
+            { key: 'dominic', label: QUIZ_TEXT.scene1.characterLabels.dominic, texture: 'char-dominic' },
+            { key: 'mum', label: QUIZ_TEXT.scene1.characterLabels.mum, texture: 'char-mum' },
+            { key: 'dad', label: QUIZ_TEXT.scene1.characterLabels.dad, texture: 'char-dad' }
         ],
         correctKeys: [ 'ben' ],
         pointsPerCorrect: 1,
@@ -65,13 +67,13 @@ export const scene1Questions: MultiSelectQuestion[] = [
     },
     {
         id: 'dont-let-him-drive',
-        question: 'Who was the subject of the demand "Don\'t let him drive that"?',
+        question: QUIZ_TEXT.scene1.questions.dontLetHimDrive,
         choices: [
-            { key: 'michael', label: 'Michael', texture: 'char-michael' },
-            { key: 'ben', label: 'Ben', texture: 'char-ben' },
-            { key: 'dominic', label: 'Dominic', texture: 'char-dominic' },
-            { key: 'mum', label: 'Mum', texture: 'char-mum' },
-            { key: 'dad', label: 'Dad', texture: 'char-dad' }
+            { key: 'michael', label: QUIZ_TEXT.scene1.characterLabels.michael, texture: 'char-michael' },
+            { key: 'ben', label: QUIZ_TEXT.scene1.characterLabels.ben, texture: 'char-ben' },
+            { key: 'dominic', label: QUIZ_TEXT.scene1.characterLabels.dominic, texture: 'char-dominic' },
+            { key: 'mum', label: QUIZ_TEXT.scene1.characterLabels.mum, texture: 'char-mum' },
+            { key: 'dad', label: QUIZ_TEXT.scene1.characterLabels.dad, texture: 'char-dad' }
         ],
         correctKeys: [ 'dominic' ],
         pointsPerCorrect: 1,
@@ -79,13 +81,13 @@ export const scene1Questions: MultiSelectQuestion[] = [
     },
     {
         id: 'buggy-in-bunker',
-        question: 'Who has driven a buggy into a bunker at Whitekirk?',
+        question: QUIZ_TEXT.scene1.questions.buggyInBunker,
         choices: [
-            { key: 'michael', label: 'Michael', texture: 'char-michael' },
-            { key: 'ben', label: 'Ben', texture: 'char-ben' },
-            { key: 'dominic', label: 'Dominic', texture: 'char-dominic' },
-            { key: 'mum', label: 'Mum', texture: 'char-mum' },
-            { key: 'dad', label: 'Dad', texture: 'char-dad' }
+            { key: 'michael', label: QUIZ_TEXT.scene1.characterLabels.michael, texture: 'char-michael' },
+            { key: 'ben', label: QUIZ_TEXT.scene1.characterLabels.ben, texture: 'char-ben' },
+            { key: 'dominic', label: QUIZ_TEXT.scene1.characterLabels.dominic, texture: 'char-dominic' },
+            { key: 'mum', label: QUIZ_TEXT.scene1.characterLabels.mum, texture: 'char-mum' },
+            { key: 'dad', label: QUIZ_TEXT.scene1.characterLabels.dad, texture: 'char-dad' }
         ],
         correctKeys: [ 'dad' ],
         pointsPerCorrect: 1,

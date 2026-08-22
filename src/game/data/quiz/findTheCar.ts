@@ -1,3 +1,5 @@
+import { QUIZ_TEXT } from './content';
+
 export interface LicensePlateChoice
 {
     key: string;
@@ -5,15 +7,14 @@ export interface LicensePlateChoice
     correct: boolean;
 }
 
-export const NARRATION_TITLE = "TIME TO GO HOME";
+export const NARRATION_TITLE = QUIZ_TEXT.findTheCar.narrationTitle;
 
-export const NARRATION_BODY = "Time to stop the traveling and go back home. "
-    + "You need to help find the car.";
+export const NARRATION_BODY = QUIZ_TEXT.findTheCar.narrationBody;
 
 // Max plates that can be picked before the round locks in.
 export const MAX_PICKS = 2;
 
-export const PICK_INSTRUCTION = `Pick ${MAX_PICKS} plates, then confirm.`;
+export const PICK_INSTRUCTION = QUIZ_TEXT.findTheCar.pickInstruction(MAX_PICKS);
 
 export const CORRECT_POINTS = 3;
 export const INCORRECT_POINTS = -1;

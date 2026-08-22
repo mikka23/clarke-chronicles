@@ -1,7 +1,8 @@
-export const NARRATION_TITLE = "THAT STUFF WILL KILL YOU";
+import { QUIZ_TEXT } from './content';
 
-export const NARRATION_BODY = "Dad once ordered a vodka, only to be told "
-    + "that stuff will kill you. Who said it?";
+export const NARRATION_TITLE = QUIZ_TEXT.paulCartoon.narrationTitle;
+
+export const NARRATION_BODY = QUIZ_TEXT.paulCartoon.narrationBody;
 
 export const CORRECT_ANSWERS = [ "paul" ];
 
