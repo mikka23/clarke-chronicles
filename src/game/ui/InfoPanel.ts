@@ -8,6 +8,10 @@ export interface InfoPanelConfig
     width?: number;
     title?: string;
     body: string;
+    // Horizontal alignment of the body text - defaults to 'center'. Useful
+    // as 'left' for list-like copy (e.g. an itemised order) that reads
+    // awkwardly when each line is centered independently.
+    bodyAlign?: 'left' | 'center' | 'right';
     dismissLabel?: string;
     // Key of a narration/SFX clip to play when the panel appears. Guarded
     // against a missing cache entry since narration audio isn't recorded yet.
@@ -138,7 +142,8 @@ export class InfoPanel extends GameObjects.Container
             stroke: '#1a0f08',
             strokeThickness: 4,
             align: 'center',
-            wordWrap: { width: wrapWidth }
+            wordWrap: { width: wrapWidth },
+            padding: { x: 12, y: 12 }
         }).setOrigin(0.5);
     }
 
@@ -148,9 +153,10 @@ export class InfoPanel extends GameObjects.Container
             fontFamily: BODY_FONT,
             fontSize: 20,
             color: '#3a2c1a',
-            align: 'center',
+            align: this.config.bodyAlign ?? 'center',
             lineSpacing: 8,
-            wordWrap: { width: wrapWidth }
+            wordWrap: { width: wrapWidth },
+            padding: { x: 8, y: 8 }
         }).setOrigin(0.5);
 
         this.add(body);
@@ -164,10 +170,8 @@ export class InfoPanel extends GameObjects.Container
     {
         return new Button(this.scene, {
             label: this.config.dismissLabel ?? 'GOT IT!',
-            width: 176,
-            height: 52,
             fontSize: 24,
-            angle: -2,
+            confirmOnEnter: true,
             onClick: () => this.hide(() => this.config.onDismiss?.())
         });
     }

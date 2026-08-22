@@ -404,6 +404,8 @@ export class CharacterSelect extends Scene
 
             const isSelected = playerKey === key;
 
+            this.tweens.killTweensOf(portrait.color);
+            this.tweens.killTweensOf(portrait.grey);
             this.tweens.add({ targets: portrait.color, alpha: isSelected ? 1 : 0, duration: 200 });
             this.tweens.add({ targets: portrait.grey, alpha: isSelected ? 0 : 1, duration: 200 });
         });

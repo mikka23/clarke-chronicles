@@ -7,15 +7,20 @@ export const POSITIVE_SOUND_FILES = [
     '13-chaser-answer',
     'ah-i-m-smart',
     'and-it-only-makes-common-sense',
-    'logical'
+    'logical',
+    'you-re-right',
+    'woooooo'
 ];
 
 export const NEGATIVE_SOUND_FILES = [
+    'fail',
+    'fuck-off-means-fuck-off',
     'how-did-I-do-you-are-obviously-still-learning',
     'i-do-not-believe-it',
     'is-that-you',
     'ted-justfeckoff',
-    'you-dont-give-anything-away'
+    'you-dont-give-anything-away',
+    'it-s-shite-being-scottish'
 ];
 
 export const POSITIVE_SOUND_KEYS = POSITIVE_SOUND_FILES.map((file) => `positive-${file}`);

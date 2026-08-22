@@ -2,6 +2,7 @@ import { Scene, GameObjects } from 'phaser';
 import { addScore } from '../systems/GameState';
 import { showScoreToast } from '../ui/ScoreToast';
 import { Button } from '../ui/Button';
+import { ScoreHud } from '../ui/ScoreHud';
 import { scene1Questions, MultiSelectQuestion, MultiSelectChoice } from '../data/quiz/scene1';
 
 const GAME_WIDTH = 1280;
@@ -30,6 +31,7 @@ export class Scene1 extends Scene
     private submitButton: Button;
     private roundObjects: GameObjects.GameObject[] = [];
     private backgroundImage: GameObjects.Image;
+    private scoreHud: ScoreHud;
 
     constructor ()
     {
@@ -45,6 +47,8 @@ export class Scene1 extends Scene
         this.backgroundImage = this.fitToCanvas(this.add.image(CENTER_X, CENTER_Y, 'ben-golf-cartoon'));
 
         this.add.rectangle(CENTER_X, CENTER_Y, GAME_WIDTH, GAME_HEIGHT, 0x081420, 0.25);
+
+        this.scoreHud = new ScoreHud(this);
 
         this.startQuestion();
     }
@@ -133,7 +137,8 @@ export class Scene1 extends Scene
             stroke: '#1a0f08',
             strokeThickness: 5,
             align: 'center',
-            wordWrap: { width: 900 }
+            wordWrap: { width: 900 },
+            padding: { x: 12, y: 12 }
         }).setOrigin(0.5).setAlpha(0).setScale(0.6);
     }
 
@@ -208,7 +213,8 @@ export class Scene1 extends Scene
             color: '#f3ecdd',
             stroke: '#1a0f08',
             strokeThickness: 5,
-            align: 'center'
+            align: 'center',
+            padding: { x: 10, y: 10 }
         }).setOrigin(0.5);
 
         const checkMark = this.add.text(PANEL_SIZE / 2 - 18, -PANEL_SIZE / 2 + 18, '✓', {
@@ -216,7 +222,8 @@ export class Scene1 extends Scene
             fontSize: 30,
             color: '#2fbf4f',
             stroke: '#1a0f08',
-            strokeThickness: 4
+            strokeThickness: 4,
+            padding: { x: 8, y: 8 }
         }).setOrigin(0.5).setVisible(false);
         this.checkMarks.set(choice.key, checkMark);
 
@@ -298,10 +305,20 @@ export class Scene1 extends Scene
     }
 
     // Fades the submit button in once every choice has finished popping in,
-    // starting at its disabled (faded) look until something is selected.
+    // starting at its disabled (faded) look unless the player already made
+    // a selection while the choices were still animating in.
     private revealSubmitButton (): void
     {
-        this.tweens.add({ targets: this.submitButton, alpha: 0.4, duration: 300 });
+        this.tweens.killTweensOf(this.submitButton);
+
+        const enabled = this.selectedKeys.size >= 1;
+
+        this.tweens.add({ targets: this.submitButton, alpha: enabled ? 1 : 0.4, duration: 300 });
+
+        if (enabled)
+        {
+            this.submitButton.setInteractive();
+        }
     }
 
     private updateSubmitState (): void
@@ -334,7 +351,11 @@ export class Scene1 extends Scene
 
         const hasNextQuestion = this.questionIndex < scene1Questions.length - 1;
 
+        const anchor = this.scoreHud.getToastAnchor();
+
         showScoreToast(this, total, {
+            x: anchor.x,
+            y: anchor.y,
             onComplete: () => {
 
                 if (hasNextQuestion)
@@ -376,7 +397,6 @@ export class Scene1 extends Scene
             x: CENTER_X,
             y: SUBMIT_Y,
             label: 'REVEAL REALITY',
-            width: 260,
             onClick: () => {
 
                 revealButton.destroy();
@@ -435,7 +455,8 @@ export class Scene1 extends Scene
             x: CENTER_X,
             y: SUBMIT_Y,
             label: 'CONTINUE',
-            onClick: () => this.scene.start('Game')
+            confirmOnEnter: true,
+            onClick: () => this.scene.start('Scene2')
         });
     }
 }

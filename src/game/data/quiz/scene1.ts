@@ -50,6 +50,20 @@ export const scene1Questions: MultiSelectQuestion[] = [
         penaltyOverrides: { mum: -5 }
     },
     {
+        id: 'struck-in-throat',
+        question: 'Select the member of the family who struck Michael in the throat with a vicious swing of the club.',
+        choices: [
+            { key: 'michael', label: 'Michael', texture: 'char-michael' },
+            { key: 'ben', label: 'Ben', texture: 'char-ben' },
+            { key: 'dominic', label: 'Dominic', texture: 'char-dominic' },
+            { key: 'mum', label: 'Mum', texture: 'char-mum' },
+            { key: 'dad', label: 'Dad', texture: 'char-dad' }
+        ],
+        correctKeys: [ 'ben' ],
+        pointsPerCorrect: 1,
+        pointsPerIncorrect: -1
+    },
+    {
         id: 'dont-let-him-drive',
         question: 'Who was the subject of the demand "Don\'t let him drive that"?',
         choices: [
